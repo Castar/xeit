@@ -20,7 +20,14 @@ var SoftForum = function (html, smime_header, smime_body, info_msg, ui_option, u
 SoftForum.prototype = new Vendor('XecureExpress');
 extend(SoftForum.prototype, {
     init: function () {
-        var contentType = this.smime_header.match(/Content-Type: \s*([\w-\/]+);*/i)[1];
+        var contentType;
+        try {
+            contentType = this.smime_header.match(/Content-Type: \s*([\w-\/]+);*/i)[1];    
+        } catch (error) {
+            contentType = "application/x-pwd";
+        }
+        
+
         if (contentType === 'application/pkcs7-mime') {
             this.decrypt = function (password) {
                 return this.decryptSMIME(this.smime_body, password);
